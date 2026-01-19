@@ -1,0 +1,497 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #00ff00;
+  padding: 10px;
+}
+
+.container {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff00;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+  max-width: 850px;
+  width: 100%;
+  max-height: 98vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #00ff00;
+}
+
+h1 {
+  font-size: 2.5em;
+  text-shadow: 0 0 10px #00ff00;
+  letter-spacing: 2px;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  font-size: 1.2em;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.stat .label {
+  font-size: 0.9em;
+  opacity: 0.8;
+  margin-bottom: 5px;
+}
+
+.stat span:last-child {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #00ff00;
+  text-shadow: 0 0 5px #00ff00;
+}
+
+.score-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.65em;
+  margin-top: 5px;
+  opacity: 0.7;
+}
+
+.score-detail {
+  white-space: nowrap;
+  font-weight: normal;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #0a0a0a;
+  border: 2px solid #00ff00;
+  margin: 8px 0;
+  cursor: crosshair;
+  aspect-ratio: 4 / 3;
+  max-height: 350px;
+  flex-shrink: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 8px 15px;
+  font-size: 0.9em;
+  border: 2px solid #00ff00;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  flex: 1;
+  min-width: 100px;
+}
+
+.btn-primary {
+  background: #00ff00;
+  color: #000;
+}
+
+.btn-primary:hover {
+  background: #00cc00;
+  box-shadow: 0 0 10px #00ff00;
+  transform: scale(1.05);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #00ff00;
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 255, 0, 0.2);
+  box-shadow: 0 0 10px #00ff00;
+}
+
+.instructions {
+  text-align: center;
+  font-size: 0.9em;
+  opacity: 0.7;
+  margin-top: 10px;
+  border-top: 1px solid #00ff00;
+  padding-top: 10px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: rgba(0, 0, 0, 0.95);
+  border: 3px solid #00ff00;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.7);
+  max-width: 400px;
+  width: 100%;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-content h2 {
+  font-size: 2em;
+  margin: 0 0 5px 0;
+  color: #00ff00;
+  text-shadow: 0 0 10px #00ff00;
+  flex-shrink: 0;
+}
+
+.modal-content p {
+  font-size: 1em;
+  margin: 2px 0;
+  color: #00ff00;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+
+#gameOverScreen .modal-content p {
+  margin: 1px 0;
+  font-size: 0.95em;
+  line-height: 1.2;
+}
+
+.modal-content > .leaderboard-container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.modal-content > .btn {
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+.modal-content h2 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: #00ff00;
+  text-shadow: 0 0 10px #00ff00;
+}
+
+.game-description {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+  color: #00ff00;
+  line-height: 1.5;
+}
+
+.player-name-input {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.player-name-input label {
+  font-size: 1.1em;
+  color: #00ff00;
+}
+
+.player-name-input input {
+  padding: 10px 15px;
+  font-size: 1em;
+  border: 2px solid #00ff00;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #00ff00;
+  text-align: center;
+  width: 100%;
+  max-width: 250px;
+  transition: all 0.3s ease;
+}
+
+.player-name-input input:focus {
+  outline: none;
+  background: rgba(0, 255, 0, 0.1);
+  box-shadow: 0 0 10px #00ff00;
+}
+
+.player-name-input input::placeholder {
+  color: rgba(0, 255, 0, 0.5);
+}
+
+.leaderboard-container {
+  margin: 15px 0;
+  background: rgba(0, 255, 0, 0.05);
+  border: 1px solid #00ff00;
+  border-radius: 5px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.leaderboard-container h3 {
+  font-size: 1.1em;
+  margin-bottom: 15px;
+  color: #00ff00;
+  text-align: center;
+  border-bottom: 1px solid #00ff00;
+  padding-bottom: 10px;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leaderboard-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: rgba(0, 255, 0, 0.1);
+  border-radius: 3px;
+  font-size: 0.95em;
+}
+
+.leaderboard-entry.highlight {
+  background: rgba(0, 255, 0, 0.25);
+  border: 1px solid #00ff00;
+}
+
+.leaderboard-rank {
+  font-weight: bold;
+  color: #00ff00;
+  min-width: 30px;
+}
+
+.leaderboard-name {
+  flex: 1;
+  margin: 0 10px;
+  color: #00ff00;
+  word-break: break-word;
+}
+
+.leaderboard-score {
+  font-weight: bold;
+  color: #00ff00;
+  text-align: right;
+  min-width: 60px;
+}
+
+.no-scores {
+  text-align: center;
+  color: rgba(0, 255, 0, 0.7);
+  padding: 15px;
+  font-style: italic;
+}
+
+.modal-content p {
+  font-size: 1.2em;
+  margin: 15px 0;
+  color: #00ff00;
+}
+
+.modal-content button {
+  margin-top: 20px;
+}
+
+.options-list {
+  margin: 25px 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  font-size: 1.1em;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.option-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #00ff00;
+}
+
+.option-item span {
+  user-select: none;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 5px;
+  }
+
+  .container {
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 95vh;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+  }
+
+  .stats {
+    flex-direction: row;
+    gap: 10px;
+    font-size: 0.95em;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .stat {
+    flex: 1;
+    min-width: 60px;
+  }
+
+  .stat span:last-child {
+    font-size: 1.2em;
+  }
+
+  .score-breakdown {
+    font-size: 0.55em;
+    gap: 1px;
+    margin-top: 3px;
+  }
+
+  #gameCanvas {
+    max-height: 300px;
+    margin: 8px 0;
+  }
+
+  .controls {
+    gap: 8px;
+    margin: 8px 0;
+  }
+
+  .btn {
+    padding: 6px 10px;
+    font-size: 0.75em;
+    min-width: 80px;
+  }
+
+  .instructions {
+    font-size: 0.7em;
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .modal-content {
+    padding: 15px;
+    max-width: 95%;
+    max-height: 95vh;
+    gap: 10px;
+  }
+
+  .modal-content h2 {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+  }
+
+  .game-description {
+    font-size: 0.85em;
+    margin-bottom: 10px;
+  }
+
+  .player-name-input {
+    margin: 8px 0;
+    gap: 5px;
+  }
+
+  .player-name-input label {
+    font-size: 0.9em;
+  }
+
+  .player-name-input input {
+    padding: 6px 8px;
+    font-size: 0.85em;
+    max-width: 180px;
+  }
+
+  .leaderboard-container {
+    margin: 8px 0;
+    padding: 8px;
+    max-height: 150px;
+    flex-shrink: 1;
+    overflow-y: auto;
+  }
+
+  .leaderboard-entry {
+    padding: 4px 6px;
+    font-size: 0.75em;
+  }
+
+  .leaderboard-rank {
+    min-width: 20px;
+  }
+
+  .leaderboard-score {
+    min-width: 40px;
+  }
+
+  .option-item {
+    font-size: 0.95em;
+  }
+}

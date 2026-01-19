@@ -1,0 +1,19 @@
+{
+  "name": "space-invaders-game",
+  "version": "1.0.0",
+  "description": "An HTML5 Space Invaders game with progressive levels",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["space invaders", "game", "html5"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": "^22.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

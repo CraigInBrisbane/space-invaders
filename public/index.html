@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Invaders</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div id="startScreen" class="modal">
+      <div class="modal-content">
+        <h2>Space Invaders</h2>
+        <p class="game-description">Destroy the invaders before they reach your ship!</p>
+        <div class="player-name-input">
+          <label for="playerName">Player Name:</label>
+          <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
+        </div>
+        
+        <div id="startLeaderboard" class="leaderboard-container">
+          <h3>Today's Top Scores</h3>
+          <div id="startLeaderboardList" class="leaderboard-list">
+            <p class="no-scores">No scores yet. Be the first!</p>
+          </div>
+        </div>
+        
+        <button id="startGameBtn" class="btn btn-primary">Start Game</button>
+      </div>
+    </div>
+    <div class="header">
+      <h1>Space Invaders</h1>
+      <div class="stats">
+        <div class="stat">
+          <span class="label">Player:</span>
+          <span id="playerDisplay">Player</span>
+        </div>
+        <div class="stat">
+          <span class="label">High Score:</span>
+          <span id="highScore">0</span>
+        </div>
+        <div class="stat">
+          <span class="label">Level:</span>
+          <span id="level">1</span>
+        </div>
+        <div class="stat">
+          <span class="label">Score:</span>
+          <span id="score">0</span>
+          <div class="score-breakdown">
+            <span class="score-detail">Hit: <span id="hitScore">0</span></span>
+            <span class="score-detail">Misses: <span id="missCount">0</span></span>
+            <span class="score-detail">Penalty: <span id="misspenalty">0</span></span>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="label">Lives:</span>
+          <span id="lives">3</span>
+        </div>
+      </div>
+    </div>
+    
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
+    <div class="controls">
+      <button id="pauseBtn" class="btn btn-primary">Pause</button>
+      <button id="optionsBtn" class="btn btn-secondary">Options</button>
+      <button id="restartBtn" class="btn btn-secondary">Restart</button>
+    </div>
+    
+    <div id="gameOverScreen" class="modal hidden">
+      <div class="modal-content">
+        <h2 id="gameOverTitle">Game Over!</h2>
+        <p id="gameOverMessage">Game Over</p>
+        <p>Player: <span id="finalPlayer">Player</span></p>
+        <p>Final Score: <span id="finalScore">0</span></p>
+        <p>Level: <span id="finalLevel">1</span></p>
+        
+        <div id="gameOverLeaderboard" class="leaderboard-container">
+          <h3>Today's Top Scores</h3>
+          <div id="gameOverLeaderboardList" class="leaderboard-list">
+          </div>
+        </div>
+        
+        <button id="restartGameBtn" class="btn btn-primary">Play Again</button>
+      </div>
+    </div>
+    
+    <div id="pauseScreen" class="modal hidden">
+      <div class="modal-content">
+        <h2>Game Paused</h2>
+        <button id="resumeBtn" class="btn btn-primary">Resume</button>
+      </div>
+    </div>
+    
+    <div id="optionsScreen" class="modal hidden">
+      <div class="modal-content">
+        <h2>Options</h2>
+        <div class="options-list">
+          <label class="option-item">
+            <input type="checkbox" id="soundToggle" checked>
+            <span>Enable Sound</span>
+          </label>
+          <label class="option-item">
+            <input type="checkbox" id="missesToggle" checked>
+            <span>Misses Cost Points</span>
+          </label>
+        </div>
+        <button id="closeOptionsBtn" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+    
+    <div class="instructions">
+      <p><strong>Controls:</strong> Arrow Keys to move | Spacebar to shoot | P to pause</p>
+    </div>
+  </div>
+  
+  <script src="game.js"></script>
+</body>
+</html>
