@@ -80,21 +80,41 @@ async function displayLeaderboard(elementId, highlightName = null) {
   }
   
   let html = '';
+  let topScoreMessage = '';
+  
   leaderboard.forEach((entry, index) => {
-    const isHighlight = entry.name === highlightName ? ' highlight' : '';
+    const isCurrentPlayer = entry.name === highlightName;
+    const isTopScore = index === 0 && isCurrentPlayer;
+    
+    let entryClass = '';
+    if (isCurrentPlayer) {
+      entryClass = isTopScore ? ' highlight top-score' : ' highlight';
+    }
+    
     const mins = Math.floor(entry.duration / 60);
     const secs = entry.duration % 60;
     const durationDisplay = entry.duration ? `${mins}m ${secs}s` : '-';
+    
+    const crown = isTopScore ? '👑 ' : '';
+    
     html += `
-      <div class="leaderboard-entry${isHighlight}">
-        <span class="leaderboard-rank">#${index + 1}</span>
+      <div class="leaderboard-entry${entryClass}">
+        ${crown}<span class="leaderboard-rank">#${index + 1}</span>
         <span class="leaderboard-name">${entry.name}</span>
         <span class="leaderboard-score">${entry.score}</span>
         <span class="leaderboard-level">Lvl: ${entry.level || 1}</span>
         <span class="leaderboard-duration">${durationDisplay}</span>
       </div>
     `;
+    
+    if (isTopScore) {
+      topScoreMessage = '🎉 NEW TOP SCORE! 🎉';
+    }
   });
+  
+  if (topScoreMessage) {
+    html = `<p class="celebration-message">${topScoreMessage}</p>` + html;
+  }
   
   container.innerHTML = html;
 }

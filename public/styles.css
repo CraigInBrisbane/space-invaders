@@ -348,6 +348,26 @@ h1 {
   font-style: italic;
 }
 
+.celebration-message {
+  text-align: center;
+  color: #ffff00;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.leaderboard-entry.top-score {
+  background: rgba(255, 215, 0, 0.2);
+  border: 2px solid #ffff00;
+}
+
 .github-link {
   text-align: center;
   margin-top: 15px;
