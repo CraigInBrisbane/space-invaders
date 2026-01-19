@@ -320,14 +320,6 @@ function update() {
       gameState.shotsFired++;
       playShootSound();
       keys[' '] = false; // Prevent rapid fire
-        y: player.y,
-        width: 4,
-        height: 10,
-        speed: 7,
-        hit: false
-      });
-      playShootSound();
-      keys[' '] = false;
     }
   }
   
