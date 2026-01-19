@@ -36,11 +36,17 @@ app.get('/api/leaderboard', (req, res) => {
 // Save score to leaderboard
 app.post('/api/leaderboard', (req, res) => {
   try {
-    const { playerName, score } = req.body;
+    const { playerName, score, missCount, level, shotsFired, duration } = req.body;
     
     if (score <= 0 || !playerName) {
       return res.status(400).json({ error: 'Invalid score or player name' });
     }
+    
+    // Get player IP address
+    const playerIp = req.headers['x-forwarded-for'] || 
+                     req.connection.remoteAddress || 
+                     req.socket.remoteAddress ||
+                     'unknown';
     
     // Read existing leaderboard
     let leaderboard = [];
@@ -49,11 +55,17 @@ app.post('/api/leaderboard', (req, res) => {
       leaderboard = JSON.parse(data);
     }
     
-    // Add new score
+    // Add new score with detailed stats
     leaderboard.push({
       name: playerName,
       score: score,
-      timestamp: new Date().getTime()
+      missCount: missCount || 0,
+      level: level || 1,
+      shotsFired: shotsFired || 0,
+      duration: duration || 0,
+      ipAddress: playerIp,
+      timestamp: new Date().getTime(),
+      date: new Date().toISOString()
     });
     
     // Sort by score descending

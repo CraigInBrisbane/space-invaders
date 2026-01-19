@@ -10,7 +10,10 @@ let gameState = {
   isPaused: false,
   gameOver: false,
   won: false,
-  playerName: 'Player'
+  playerName: 'Player',
+  shotsFired: 0,
+  gameStartTime: null,
+  gameDuration: 0
 };
 
 let gameSettings = {
@@ -40,14 +43,21 @@ async function getLeaderboard() {
   }
 }
 
-async function saveToLeaderboard(playerName, score) {
+async function saveToLeaderboard(playerName, score, stats = {}) {
   try {
     const response = await fetch('/api/leaderboard', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ playerName, score })
+      body: JSON.stringify({ 
+        playerName, 
+        score,
+        missCount: stats.missCount || 0,
+        level: stats.level || 1,
+        shotsFired: stats.shotsFired || 0,
+        duration: stats.duration || 0
+      })
     });
     
     if (!response.ok) throw new Error('Failed to save score');
@@ -77,6 +87,8 @@ async function displayLeaderboard(elementId, highlightName = null) {
         <span class="leaderboard-rank">#${index + 1}</span>
         <span class="leaderboard-name">${entry.name}</span>
         <span class="leaderboard-score">${entry.score}</span>
+        <span class="leaderboard-level">Lvl: ${entry.level || 1}</span>
+        <span class="leaderboard-duration">${entry.duration ? Math.floor(entry.duration / 60) + 'm' : '-'}</span>
       </div>
     `;
   });
@@ -211,6 +223,9 @@ function init() {
   gameState.isPaused = false;
   gameState.gameOver = false;
   gameState.won = false;
+  gameState.shotsFired = 0;
+  gameState.gameStartTime = Date.now();
+  gameState.gameDuration = 0;
   
   enemyDirection = 1;
   player.x = canvas.width / 2 - 25;
@@ -297,6 +312,14 @@ function update() {
     if (player.bullets.length < 5) {
       player.bullets.push({
         x: player.x + player.width / 2 - 2,
+        y: player.y,
+        width: 4,
+        height: 10,
+        speed: 7
+      });
+      gameState.shotsFired++;
+      playShootSound();
+      keys[' '] = false; // Prevent rapid fire
         y: player.y,
         width: 4,
         height: 10,
@@ -588,9 +611,17 @@ async function showGameOver(won) {
   finalScore.textContent = gameState.score;
   finalLevel.textContent = gameState.level;
   
+  // Calculate game duration in seconds
+  gameState.gameDuration = Math.floor((Date.now() - gameState.gameStartTime) / 1000);
+  
   // Save to leaderboard and display it (only if score > 0)
   if (gameState.score > 0) {
-    await saveToLeaderboard(gameState.playerName, gameState.score);
+    await saveToLeaderboard(gameState.playerName, gameState.score, {
+      missCount: gameState.missCount,
+      level: gameState.level,
+      shotsFired: gameState.shotsFired,
+      duration: gameState.gameDuration
+    });
   }
   await displayLeaderboard('gameOverLeaderboardList', gameState.playerName);
   

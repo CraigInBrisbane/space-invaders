@@ -324,7 +324,21 @@ h1 {
   font-weight: bold;
   color: #00ff00;
   text-align: right;
-  min-width: 60px;
+  min-width: 70px;
+}
+
+.leaderboard-level {
+  color: #00ff00;
+  text-align: center;
+  min-width: 50px;
+  font-size: 0.9em;
+}
+
+.leaderboard-duration {
+  color: #00ff00;
+  text-align: center;
+  min-width: 45px;
+  font-size: 0.9em;
 }
 
 .no-scores {
@@ -480,7 +494,7 @@ h1 {
 
   .leaderboard-entry {
     padding: 4px 6px;
-    font-size: 0.75em;
+    font-size: 0.7em;
   }
 
   .leaderboard-rank {
@@ -488,7 +502,17 @@ h1 {
   }
 
   .leaderboard-score {
-    min-width: 40px;
+    min-width: 45px;
+  }
+
+  .leaderboard-level {
+    min-width: 35px;
+    font-size: 0.8em;
+  }
+
+  .leaderboard-duration {
+    min-width: 30px;
+    font-size: 0.8em;
   }
 
   .option-item {
