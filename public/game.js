@@ -70,7 +70,7 @@ async function saveToLeaderboard(playerName, score, stats = {}) {
   }
 }
 
-async function displayLeaderboard(elementId, highlightName = null) {
+async function displayLeaderboard(elementId, highlightName = null, currentScore = null) {
   const leaderboard = await getLeaderboard();
   const container = document.getElementById(elementId);
   
@@ -83,7 +83,8 @@ async function displayLeaderboard(elementId, highlightName = null) {
   let topScoreMessage = '';
   
   leaderboard.forEach((entry, index) => {
-    const isCurrentPlayer = entry.name === highlightName;
+    // Only highlight if this is the current player's score AND they made top 10
+    const isCurrentPlayer = highlightName && entry.name === highlightName && currentScore && entry.score === currentScore;
     const isTopScore = index === 0 && isCurrentPlayer;
     
     let entryClass = '';
@@ -235,10 +236,10 @@ function startGame() {
   localStorage.setItem('lastPlayerName', gameState.playerName);
   
   document.getElementById('startScreen').classList.add('hidden');
-  init();
+  await init();
   gameLoop();
 }
-function init() {
+async function init() {
   gameState.level = 1;
   gameState.score = 0;
   gameState.missCount = 0;
@@ -249,6 +250,12 @@ function init() {
   gameState.shotsFired = 0;
   gameState.gameStartTime = Date.now();
   gameState.gameDuration = 0;
+  
+  // Load leaderboard to get current high score
+  const leaderboard = await getLeaderboard();
+  if (leaderboard.length > 0) {
+    localStorage.setItem('currentHighScore', leaderboard[0].score);
+  }
   
   enemyDirection = 1;
   player.x = canvas.width / 2 - 25;
@@ -591,9 +598,8 @@ function updateUI() {
   const missPenalty = gameState.missCount * 5;
   const totalScore = gameOptions.missesCostPoints ? hitScore - missPenalty : hitScore;
   
-  // Get high score from leaderboard
-  const leaderboard = getLeaderboard();
-  const highScore = leaderboard.length > 0 ? leaderboard[0].score : 0;
+  // Get high score from localStorage (set on game init)
+  const highScore = parseInt(localStorage.getItem('currentHighScore')) || 0;
   
   document.getElementById('playerDisplay').textContent = gameState.playerName;
   document.getElementById('highScore').textContent = highScore;
@@ -638,7 +644,7 @@ async function showGameOver(won) {
       duration: gameState.gameDuration
     });
   }
-  await displayLeaderboard('gameOverLeaderboardList', gameState.playerName);
+  await displayLeaderboard('gameOverLeaderboardList', gameState.playerName, gameState.score);
   
   modal.classList.remove('hidden');
 }
