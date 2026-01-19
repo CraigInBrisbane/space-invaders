@@ -24,40 +24,44 @@ let gameOptions = {
   missesCostPoints: true
 };
 
-// Leaderboard functions
-function getLeaderboardKey() {
-  const today = new Date().toISOString().split('T')[0];
-  return `spaceinvaders_leaderboard_${today}`;
+// Leaderboard functions (server-based persistence)
+let cachedLeaderboard = [];
+
+async function getLeaderboard() {
+  try {
+    const response = await fetch('/api/leaderboard');
+    if (!response.ok) throw new Error('Failed to fetch leaderboard');
+    cachedLeaderboard = await response.json();
+    return cachedLeaderboard;
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    // Fall back to cached version
+    return cachedLeaderboard;
+  }
 }
 
-function getLeaderboard() {
-  const key = getLeaderboardKey();
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : [];
+async function saveToLeaderboard(playerName, score) {
+  try {
+    const response = await fetch('/api/leaderboard', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ playerName, score })
+    });
+    
+    if (!response.ok) throw new Error('Failed to save score');
+    const updated = await response.json();
+    cachedLeaderboard = updated;
+    return updated;
+  } catch (error) {
+    console.error('Error saving to leaderboard:', error);
+    return cachedLeaderboard;
+  }
 }
 
-function saveToLeaderboard(playerName, score) {
-  const leaderboard = getLeaderboard();
-  leaderboard.push({
-    name: playerName,
-    score: score,
-    timestamp: new Date().getTime()
-  });
-  
-  // Sort by score descending
-  leaderboard.sort((a, b) => b.score - a.score);
-  
-  // Keep only top 10
-  const top10 = leaderboard.slice(0, 10);
-  
-  const key = getLeaderboardKey();
-  localStorage.setItem(key, JSON.stringify(top10));
-  
-  return top10;
-}
-
-function displayLeaderboard(elementId, highlightName = null) {
-  const leaderboard = getLeaderboard();
+async function displayLeaderboard(elementId, highlightName = null) {
+  const leaderboard = await getLeaderboard();
   const container = document.getElementById(elementId);
   
   if (leaderboard.length === 0) {
@@ -564,7 +568,7 @@ function updateUI() {
 }
 
 // Show Game Over
-function showGameOver(won) {
+async function showGameOver(won) {
   const modal = document.getElementById('gameOverScreen');
   const title = document.getElementById('gameOverTitle');
   const message = document.getElementById('gameOverMessage');
@@ -586,9 +590,9 @@ function showGameOver(won) {
   
   // Save to leaderboard and display it (only if score > 0)
   if (gameState.score > 0) {
-    saveToLeaderboard(gameState.playerName, gameState.score);
+    await saveToLeaderboard(gameState.playerName, gameState.score);
   }
-  displayLeaderboard('gameOverLeaderboardList', gameState.playerName);
+  await displayLeaderboard('gameOverLeaderboardList', gameState.playerName);
   
   modal.classList.remove('hidden');
 }
