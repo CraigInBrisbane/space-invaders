@@ -13,6 +13,12 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
+# Create data directory for leaderboard persistence
+RUN mkdir -p /app/data
+
+# Declare volume for persistent data
+VOLUME ["/app/data"]
+
 # Expose the port the app runs on
 EXPOSE 3000
 

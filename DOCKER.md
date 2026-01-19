@@ -16,20 +16,22 @@ docker build -t space-invaders:1.0 .
 
 ## Running the Container
 
-To run the container:
+To run the container with leaderboard persistence:
 
 ```bash
-docker run -p 3000:3000 space-invaders:latest
+docker run -p 3000:3000 -v space-invaders-data:/app/data space-invaders:latest
 ```
 
 Then open your browser and visit: `http://localhost:3000`
 
+**Important:** The `-v space-invaders-data:/app/data` flag creates and mounts a named volume that persists leaderboard data across container restarts.
+
 ## Running in the Background
 
-To run the container in the background (detached mode):
+To run the container in the background (detached mode) with data persistence:
 
 ```bash
-docker run -d -p 3000:3000 --name space-invaders space-invaders:latest
+docker run -d -p 3000:3000 -v space-invaders-data:/app/data --name space-invaders space-invaders:latest
 ```
 
 ## Stopping the Container
@@ -82,7 +84,7 @@ docker push yourusername/space-invaders:latest
 docker run -p 3000:3000 yourusername/space-invaders:latest
 ```
 
-## Using Docker Compose (Optional)
+## Using Docker Compose (Recommended)
 
 Create a `docker-compose.yml` file:
 
@@ -94,9 +96,15 @@ services:
     build: .
     ports:
       - "3000:3000"
+    volumes:
+      - space-invaders-data:/app/data
     environment:
       - NODE_ENV=production
     restart: unless-stopped
+
+volumes:
+  space-invaders-data:
+    driver: local
 ```
 
 Then run:
@@ -104,6 +112,8 @@ Then run:
 ```bash
 docker-compose up -d
 ```
+
+**Advantage:** Docker Compose automatically handles the volume setup and ensures data persists across container restarts.
 
 ## System Requirements
 
