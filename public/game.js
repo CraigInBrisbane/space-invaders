@@ -76,16 +76,22 @@ async function displayLeaderboard(elementId, highlightName = null, currentScore 
   
   if (leaderboard.length === 0) {
     container.innerHTML = '<p class="no-scores">No scores yet. Be the first!</p>';
-    return;
+    return null;
   }
   
   let html = '';
   let topScoreMessage = '';
+  let playerRanking = null;
   
   leaderboard.forEach((entry, index) => {
     // Only highlight if this is the current player's score AND they made top 10
     const isCurrentPlayer = highlightName && entry.name === highlightName && currentScore && entry.score === currentScore;
     const isTopScore = index === 0 && isCurrentPlayer;
+    
+    // Track the player's ranking position
+    if (isCurrentPlayer && playerRanking === null) {
+      playerRanking = index + 1;
+    }
     
     let entryClass = '';
     if (isCurrentPlayer) {
@@ -118,6 +124,7 @@ async function displayLeaderboard(elementId, highlightName = null, currentScore 
   }
   
   container.innerHTML = html;
+  return playerRanking;
 }
 
 // Audio context for sound effects
@@ -636,6 +643,7 @@ async function showGameOver(won) {
   gameState.gameDuration = Math.floor((Date.now() - gameState.gameStartTime) / 1000);
   
   // Save to leaderboard and display it (only if score > 0)
+  let playerRanking = null;
   if (gameState.score > 0) {
     await saveToLeaderboard(gameState.playerName, gameState.score, {
       missCount: gameState.missCount,
@@ -644,7 +652,24 @@ async function showGameOver(won) {
       duration: gameState.gameDuration
     });
   }
-  await displayLeaderboard('gameOverLeaderboardList', gameState.playerName, gameState.score);
+  playerRanking = await displayLeaderboard('gameOverLeaderboardList', gameState.playerName, gameState.score);
+  
+  // Display congratulations message if player made the leaderboard
+  const congratsElement = document.getElementById('congratsMessage');
+  if (playerRanking && playerRanking <= 10) {
+    let congratsText = '';
+    if (playerRanking === 1) {
+      congratsText = '🏆 Congrats! Highest score today!';
+    } else {
+      const positions = ['', 'st', 'nd', 'rd'];
+      const suffix = positions[playerRanking] || 'th';
+      congratsText = `Well done, you got the ${playerRanking}${suffix} highest score today!`;
+    }
+    congratsElement.textContent = congratsText;
+    congratsElement.style.display = 'block';
+  } else {
+    congratsElement.style.display = 'none';
+  }
   
   modal.classList.remove('hidden');
 }
