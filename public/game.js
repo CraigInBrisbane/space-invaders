@@ -228,7 +228,7 @@ document.getElementById('missesToggle').addEventListener('change', (e) => {
 });
 
 // Start Game
-function startGame() {
+async function startGame() {
   const playerNameInput = document.getElementById('playerName');
   gameState.playerName = playerNameInput.value.trim() || 'Player';
   
