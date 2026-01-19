@@ -337,7 +337,7 @@ h1 {
 .leaderboard-duration {
   color: #00ff00;
   text-align: center;
-  min-width: 45px;
+  min-width: 65px;
   font-size: 0.9em;
 }
 
@@ -511,7 +511,7 @@ h1 {
   }
 
   .leaderboard-duration {
-    min-width: 30px;
+    min-width: 50px;
     font-size: 0.8em;
   }
 

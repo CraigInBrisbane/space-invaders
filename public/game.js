@@ -82,13 +82,16 @@ async function displayLeaderboard(elementId, highlightName = null) {
   let html = '';
   leaderboard.forEach((entry, index) => {
     const isHighlight = entry.name === highlightName ? ' highlight' : '';
+    const mins = Math.floor(entry.duration / 60);
+    const secs = entry.duration % 60;
+    const durationDisplay = entry.duration ? `${mins}m ${secs}s` : '-';
     html += `
       <div class="leaderboard-entry${isHighlight}">
         <span class="leaderboard-rank">#${index + 1}</span>
         <span class="leaderboard-name">${entry.name}</span>
         <span class="leaderboard-score">${entry.score}</span>
         <span class="leaderboard-level">Lvl: ${entry.level || 1}</span>
-        <span class="leaderboard-duration">${entry.duration ? Math.floor(entry.duration / 60) + 'm' : '-'}</span>
+        <span class="leaderboard-duration">${durationDisplay}</span>
       </div>
     `;
   });
